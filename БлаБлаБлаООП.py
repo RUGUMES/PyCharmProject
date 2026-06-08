@@ -198,33 +198,29 @@ def run_game():
         print(f'На тебя нападает {monster.get_name()}.')
         print(f'Монстр перед вами имеет {monster.get_hp()} HP и {monster.get_dmg()} Damage.')
 
+        weapon_index = 0
+
         while monster.is_alive() and hunter.is_alive():
             print(f'{hunter.get_name()} имеет {hunter.get_hp()} HP')
             hunter.show_inventory()
 
-            try:
-                choice = int(input('Выберите оружие:'))
-                if 0 <= choice < hunter.get_len_weapons():
+            print(f'Выбранное оружие {hunter._Hunter__weapons[weapon_index].name}')
+            hunter.attack(weapon_index, monster)
 
-                    hunter.attack(choice, monster)
-                else:
-                    continue
-            except ValueError:
-                print('Введите число:')
-                continue
-
-            monster.attack_hunter(hunter)
+            if monster.is_alive():
+                monster.attack_hunter(hunter)
+                print(f'{monster.get_name()} нападает. {hunter.get_name()} HP {hunter.get_hp()}')
 
             if not hunter.is_alive():
-                print(f'{hunter.get_name()} поражение')
                 break
 
-            print('Статус')
-            print(f'{hunter.get_name()} HP: {hunter.get_hp()}.')
-            print(f'{monster.get_name()} HP: {monster.get_hp()}.')
+            weapon_index = (weapon_index + 1) % hunter.get_len_weapons()
 
         if not hunter.is_alive():
             break
+
+
+
 
     if hunter.is_alive():
         print(f'{hunter.get_name()} зачистил старый замок от врагов')
